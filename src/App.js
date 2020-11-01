@@ -1,26 +1,65 @@
 import React from "react";
+import { useState, useEffect } from "react";
+import api from "./services/api";
 
 import "./styles.css";
 
 function App() {
+  const [repositories, setRepositories] = useState([]);
+
+  useEffect(() => {
+    async function getRepos() {
+      try {
+        const {data} = await api.get("/repositories");
+        setRepositories(data);
+        console.log(data, 'DATA AQUI')
+      } catch (error) {
+        alert("Ocorreu um erro ao buscar os repos");
+      }
+    }
+    getRepos();
+  }, [])
+
   async function handleAddRepository() {
-    // TODO
+    const response = await api.post(`/repositories`, {
+      title: "trellooo",
+	    url: "github.com/brendammelo",
+	    techs: "react",
+	    likes: 0
+    });
+    
+    console.log(response.data)
+
+   const repositorie = response.data
+
+   setRepositories([...repositories, repositorie])
+
+
   }
 
   async function handleRemoveRepository(id) {
-    // TODO
+   
+
+   await api.delete(`/repositories/${id}`) 
+   
+   const newRepos = repositories.filter(item => item.id !== id)
+
+   setRepositories(newRepos);
+   console.log(repositories, 'REPOSITORIE REMOVED')
   }
 
   return (
     <div>
       <ul data-testid="repository-list">
-        <li>
-          Repositório 1
+       {repositories.map(({title, id}, i) => ( 
+       <li key={String(i)}>
+         {title}
 
-          <button onClick={() => handleRemoveRepository(1)}>
-            Remover
-          </button>
-        </li>
+         <button onClick={() => handleRemoveRepository(id)}>
+           Remover
+         </button>
+       </li>
+       )) }
       </ul>
 
       <button onClick={handleAddRepository}>Adicionar</button>
