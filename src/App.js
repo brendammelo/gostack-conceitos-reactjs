@@ -12,7 +12,7 @@ function App() {
       try {
         const {data} = await api.get("/repositories");
         setRepositories(data);
-        console.log(data, 'DATA AQUI')
+        
       } catch (error) {
         alert("Ocorreu um erro ao buscar os repos");
       }
@@ -28,7 +28,7 @@ function App() {
 	    likes: 0
     });
     
-    console.log(response.data)
+    
 
    const repositorie = response.data
 
@@ -45,7 +45,7 @@ function App() {
    const newRepos = repositories.filter(item => item.id !== id)
 
    setRepositories(newRepos);
-   console.log(repositories, 'REPOSITORIE REMOVED')
+   
   }
 
   return (
